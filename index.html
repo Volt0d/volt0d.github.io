@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Volt0d</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #000000;
+    --muted: #6b6b6b;
+    --border: #e5e5e5;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+                 "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ---------- Header ---------- */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    padding: 14px 24px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    animation: slideDown .5s ease both;
+  }
+  .brand { font-weight: 800; letter-spacing: .02em; font-size: 1.05rem; }
+
+  .lang { display: flex; flex-wrap: wrap; gap: 4px; background: #f0f0f0; border-radius: 999px; padding: 4px; }
+  .lang button {
+    background: transparent; border: 0; cursor: pointer;
+    padding: 6px 12px; border-radius: 999px;
+    font: inherit; font-size: .8rem; font-weight: 600; color: var(--muted);
+    transition: background .3s, color .3s, transform .15s;
+  }
+  .lang button:hover { color: #000; }
+  .lang button:active { transform: scale(.95); }
+  .lang button.active { background: #000; color: #fff; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    max-width: 880px; margin: 0 auto; padding: 96px 24px 64px;
+  }
+  .eyebrow {
+    display: inline-block; font-size: .78rem; font-weight: 700; letter-spacing: .15em;
+    text-transform: uppercase; border: 1px solid #000; border-radius: 999px;
+    padding: 6px 14px; margin-bottom: 24px;
+    animation: fadeUp .6s ease both;
+  }
+  h1 {
+    font-size: clamp(2.6rem, 8vw, 5rem); line-height: 1.02; margin: 0 0 20px;
+    font-weight: 800; letter-spacing: -.02em;
+    animation: fadeUp .7s ease .1s both;
+  }
+  .lead {
+    font-size: clamp(1.1rem, 2.4vw, 1.35rem); max-width: 640px; margin: 0 0 32px; color: #222;
+    animation: fadeUp .7s ease .2s both;
+  }
+  .meta {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    animation: fadeUp .7s ease .3s both;
+  }
+  .chip {
+    border: 1px solid var(--border); border-radius: 999px; padding: 8px 16px;
+    font-size: .9rem; transition: background .25s, color .25s, border-color .25s;
+  }
+  .chip:hover { background: #000; color: #fff; border-color: #000; }
+
+  /* ---------- Sections ---------- */
+  section.block {
+    max-width: 880px; margin: 0 auto; padding: 48px 24px;
+    border-top: 1px solid var(--border);
+    animation: fadeUp .7s ease both;
+  }
+  h2 {
+    font-size: 1.4rem; margin: 0 0 24px; font-weight: 800; letter-spacing: -.01em;
+  }
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;
+  }
+  .card {
+    border: 1px solid var(--border); border-radius: 16px; padding: 22px;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.1);
+    border-color: #000;
+  }
+  .num {
+    display: inline-grid; place-items: center; width: 34px; height: 34px;
+    background: #000; color: #fff; border-radius: 10px; font-weight: 700; margin-bottom: 14px;
+  }
+  .card h3 { font-size: 1.05rem; margin: 0 0 8px; }
+  .card p { margin: 0; color: #333; font-size: .95rem; }
+
+  .links { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn {
+    display: inline-block; padding: 12px 22px; border-radius: 10px;
+    text-decoration: none; font-weight: 600; font-size: .95rem;
+    transition: transform .15s, box-shadow .2s, background .2s, color .2s;
+  }
+  .btn-solid { background: #000; color: #fff; box-shadow: 0 6px 18px rgba(0,0,0,.18); }
+  .btn-solid:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.26); }
+  .btn-outline { border: 1px solid #000; color: #000; }
+  .btn-outline:hover { background: #000; color: #fff; transform: translateY(-2px); }
+
+  .game {
+    max-width: 880px; margin: 0 auto; padding: 48px 24px 24px;
+    border-top: 1px solid var(--border);
+  }
+  .game-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .game-head h2 { margin: 0; }
+  .scores { font-size: .9rem; font-variant-numeric: tabular-nums; color: var(--muted); }
+  .game-box {
+    border: 1px solid #000; border-radius: 16px; overflow: hidden; background: #fff;
+    cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
+  }
+  #dino { display: block; width: 100%; height: auto; }
+  .game-hint { margin-top: 12px; font-size: .85rem; color: var(--muted); }
+
+  footer {
+    max-width: 880px; margin: 0 auto; padding: 32px 24px 48px;
+    border-top: 1px solid var(--border); color: var(--muted); font-size: .88rem;
+  }
+
+  /* ---------- Animations ---------- */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-100%); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+
+  @media (max-width: 560px) {
+    header { padding: 12px 16px; }
+    .hero { padding: 64px 18px 48px; }
+    section.block { padding: 40px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">Volt0d</div>
+  <nav class="lang" id="langSwitch" aria-label="Language">
+    <button data-lang="en" class="active">EN</button>
+    <button data-lang="ru">RU</button>
+    <button data-lang="by">BY</button>
+    <button data-lang="ua">UA</button>
+    <button data-lang="zh">中文</button>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="eyebrow" data-i18n="eyebrow">Programmer</div>
+  <h1 data-i18n="greeting">Hi, I'm Volt0d.</h1>
+  <p class="lead" data-i18n="lead">I write code, build clean tools and small projects, and care about simple, honest design.</p>
+  <div class="meta">
+    <span class="chip" data-i18n="chipRole">Programmer</span>
+    <span class="chip" data-i18n="chipLocation">Based in Russia</span>
+    <span class="chip" data-i18n="chipStyle">Black &amp; white</span>
+  </div>
+</section>
+
+<section class="block">
+  <h2 data-i18n="whatTitle">What I do</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="num">01</div>
+      <h3 data-i18n="what1Title">Web tools</h3>
+      <p data-i18n="what1Text">Small web apps and interfaces that are fast, readable and easy to use.</p>
+    </div>
+    <div class="card">
+      <div class="num">02</div>
+      <h3 data-i18n="what2Title">Automation</h3>
+      <p data-i18n="what2Text">Scripts and integrations that remove repetitive work and save time.</p>
+    </div>
+    <div class="card">
+      <div class="num">03</div>
+      <h3 data-i18n="what3Title">Clean design</h3>
+      <p data-i18n="what3Text">Minimal interfaces in black and white, with smooth animations and clear structure.</p>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <h2 data-i18n="principlesTitle">Principles</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="num">A</div>
+      <h3 data-i18n="p1Title">No malicious files</h3>
+      <p data-i18n="p1Text">I do not publish malware, exploits or anything harmful. Everything I share is open for review.</p>
+    </div>
+    <div class="card">
+      <div class="num">B</div>
+      <h3 data-i18n="p2Title">Transparency</h3>
+      <p data-i18n="p2Text">Clear code, readable structure and no hidden behavior.</p>
+    </div>
+    <div class="card">
+      <div class="num">C</div>
+      <h3 data-i18n="p3Title">Privacy first</h3>
+      <p data-i18n="p3Text">No tracking and no collection of personal data in the projects I publish.</p>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <h2 data-i18n="linksTitle">Links</h2>
+  <div class="links">
+    <a class="btn btn-solid" href="https://github.com/Volt0d" target="_blank" rel="noopener" data-i18n="linkGithub">GitHub profile</a>
+  </div>
+</section>
+
+<section class="game">
+  <div class="game-head">
+    <h2 data-i18n="gameTitle">Play while you're here</h2>
+  </div>
+  <div class="game-box" id="gameBox">
+    <canvas id="dino" width="800" height="220" aria-label="Dino game"></canvas>
+  </div>
+  <div class="game-hint" data-i18n="gameHint">Press Space or Up arrow, or tap the game, to jump. Press again to restart after a game over.</div>
+</section>
+
+<footer>
+  <span data-i18n="footer">Volt0d. Built with plain HTML, CSS and JavaScript.</span>
+</footer>
+
+<script>
+const T = {
+  en: {
+    eyebrow: "Programmer",
+    greeting: "Hi, I'm Volt0d.",
+    lead: "I write code, build clean tools and small projects, and care about simple, honest design.",
+    chipRole: "Programmer", chipLocation: "Based in Russia", chipStyle: "Black & white",
+    whatTitle: "What I do",
+    what1Title: "Web tools", what1Text: "Small web apps and interfaces that are fast, readable and easy to use.",
+    what2Title: "Automation", what2Text: "Scripts and integrations that remove repetitive work and save time.",
+    what3Title: "Clean design", what3Text: "Minimal interfaces in black and white, with smooth animations and clear structure.",
+    principlesTitle: "Principles",
+    p1Title: "No malicious files", p1Text: "I do not publish malware, exploits or anything harmful. Everything I share is open for review.",
+    p2Title: "Transparency", p2Text: "Clear code, readable structure and no hidden behavior.",
+    p3Title: "Privacy first", p3Text: "No tracking and no collection of personal data in the projects I publish.",
+    linksTitle: "Links", linkGithub: "GitHub profile", linkDws: "DWS project",
+    footer: "Volt0d. Built with plain HTML, CSS and JavaScript.",
+    gameTitle: "Play while you're here", scoreLabel: "Score", hiLabel: "Hi",
+    gameHint: "Press Space or Up arrow, or tap the game, to jump. Press again to restart after a game over."
+  },
+  ru: {
+    eyebrow: "Программист",
+    greeting: "Привет, я Volt0d.",
+    lead: "Я пишу код, создаю аккуратные инструменты и небольшие проекты и ценю простой и честный дизайн.",
+    chipRole: "Программист", chipLocation: "Живу в России", chipStyle: "Черно-белый стиль",
+    whatTitle: "Чем я занимаюсь",
+    what1Title: "Веб-инструменты", what1Text: "Небольшие веб-приложения и интерфейсы, которые быстрые, понятные и удобные.",
+    what2Title: "Автоматизация", what2Text: "Скрипты и интеграции, которые убирают рутину и экономят время.",
+    what3Title: "Чистый дизайн", what3Text: "Минималистичные интерфейсы в черно-белых тонах с плавными анимациями и понятной структурой.",
+    principlesTitle: "Принципы",
+    p1Title: "Никаких вредоносных файлов", p1Text: "Я не публикую вредоносное ПО, эксплойты и ничего опасного. Всё, чем я делюсь, открыто для проверки.",
+    p2Title: "Прозрачность", p2Text: "Понятный код, читаемая структура и никакого скрытого поведения.",
+    p3Title: "Приватность прежде всего", p3Text: "В публикуемых проектах нет слежки и сбора персональных данных.",
+    linksTitle: "Ссылки", linkGithub: "Профиль на GitHub", linkDws: "Проект DWS",
+    footer: "Volt0d. Сделано на чистом HTML, CSS и JavaScript.",
+    gameTitle: "Поиграйте, пока здесь", scoreLabel: "Счёт", hiLabel: "Рекорд",
+    gameHint: "Нажмите пробел или стрелку вверх, либо коснитесь игры, чтобы прыгнуть. После проигрыша нажмите ещё раз для новой игры."
+  },
+  by: {
+    eyebrow: "Праграміст",
+    greeting: "Прывітанне, я Volt0d.",
+    lead: "Я пішу код, ствараю акуратныя інструменты і невялікія праекты і цаню просты і сумленны дызайн.",
+    chipRole: "Праграміст", chipLocation: "Жыву ў Расіі", chipStyle: "Чорна-белы стыль",
+    whatTitle: "Чым я займаюся",
+    what1Title: "Веб-інструменты", what1Text: "Невялікія вэб-прыкладанні і інтэрфейсы, якія хуткія, зразумелыя і зручныя.",
+    what2Title: "Аўтаматызацыя", what2Text: "Скрыпты і інтэграцыі, якія прыбіраюць рутыну і эканомяць час.",
+    what3Title: "Чысты дызайн", what3Text: "Мінімалістычныя інтэрфейсы ў чорна-белых тонах з плаўнымі анімацыямі і зразумелай структурай.",
+    principlesTitle: "Прынцыпы",
+    p1Title: "Ніякіх шкодных файлаў", p1Text: "Я не публікую шкодныя праграмы, эксплойты і нічога небяспечнага. Усё, чым я дзялюся, адкрыта для праверкі.",
+    p2Title: "Празрыстасць", p2Text: "Зразумелы код, чытэльная структура і ніякіх схаваных паводзін.",
+    p3Title: "Прыватнасць перш за ўсё", p3Text: "У публікуемых праектах няма сачэння і збору асабістых дадзеных.",
+    linksTitle: "Спасылкі", linkGithub: "Профіль на GitHub", linkDws: "Праект DWS",
+    footer: "Volt0d. Зроблена на чыстым HTML, CSS і JavaScript.",
+    gameTitle: "Гуляйце, пакуль тут", scoreLabel: "Лік", hiLabel: "Рэкорд",
+    gameHint: "Націсніце прабел або стрэлку ўверх, або краніце гульню, каб скочыць. Пасля паразы націсніце яшчэ раз, каб пачаць нанова."
+  },
+  ua: {
+    eyebrow: "Програміст",
+    greeting: "Привіт, я Volt0d.",
+    lead: "Я пишу код, створюю акуратні інструменти та невеликі проєкти і ціню простий і чесний дизайн.",
+    chipRole: "Програміст", chipLocation: "Живу в Росії", chipStyle: "Чорно-білий стиль",
+    whatTitle: "Чим я займаюся",
+    what1Title: "Веб-інструменти", what1Text: "Невеликі веб-застосунки та інтерфейси, які швидкі, зрозумілі й зручні.",
+    what2Title: "Автоматизація", what2Text: "Скрипти та інтеграції, які прибирають рутину й заощаджують час.",
+    what3Title: "Чистий дизайн", what3Text: "Мінімалістичні інтерфейси в чорно-білих тонах із плавними анімаціями та зрозумілою структурою.",
+    principlesTitle: "Принципи",
+    p1Title: "Жодних шкідливих файлів", p1Text: "Я не публікую шкідливе ПЗ, експлойти та нічого небезпечного. Усе, чим я ділюся, відкрите для перевірки.",
+    p2Title: "Прозорість", p2Text: "Зрозумілий код, читабельна структура і жодної прихованої поведінки.",
+    p3Title: "Приватність понад усе", p3Text: "У проєктах, які я публікую, немає стеження та збору персональних даних.",
+    linksTitle: "Посилання", linkGithub: "Профіль на GitHub", linkDws: "Проєкт DWS",
+    footer: "Volt0d. Зроблено на чистому HTML, CSS і JavaScript.",
+    gameTitle: "Пограйте, поки тут", scoreLabel: "Рахунок", hiLabel: "Рекорд",
+    gameHint: "Натисніть пробіл або стрілку вгору, або торкніться гри, щоб стрибнути. Після програшу натисніть ще раз, щоб почати знову."
+  },
+  zh: {
+    eyebrow: "程序员",
+    greeting: "你好，我是 Volt0d。",
+    lead: "我编写代码，打造简洁的工具和小型项目，并注重简单、真诚的设计。",
+    chipRole: "程序员", chipLocation: "居住在俄罗斯", chipStyle: "黑白风格",
+    whatTitle: "我做什么",
+    what1Title: "网页工具", what1Text: "快速、易读、易用的小型网页应用和界面。",
+    what2Title: "自动化", what2Text: "消除重复工作、节省时间的脚本和集成。",
+    what3Title: "简洁设计", what3Text: "黑白配色的极简界面，配合流畅的动画和清晰的结构。",
+    principlesTitle: "原则",
+    p1Title: "不发布恶意文件", p1Text: "我不发布恶意软件、漏洞利用程序或任何有害内容。我分享的所有内容都可以供人审查。",
+    p2Title: "透明", p2Text: "代码清晰，结构易读，没有隐藏行为。",
+    p3Title: "隐私优先", p3Text: "我发布的项目不包含追踪，也不收集个人数据。",
+    linksTitle: "链接", linkGithub: "GitHub 主页", linkDws: "DWS 项目",
+    footer: "Volt0d。使用纯 HTML、CSS 和 JavaScript 制作。",
+    gameTitle: "在这里玩一会儿", scoreLabel: "分数", hiLabel: "最高分",
+    gameHint: "按空格键或上方向键，或点击游戏即可跳跃。游戏结束后再次按下即可重新开始。"
+  }
+};
+
+function loadLang() {
+  try { return localStorage.getItem("lang") || "en"; } catch (e) { return "en"; }
+}
+function saveLang(lang) {
+  try { localStorage.setItem("lang", lang); } catch (e) {}
+}
+
+function setLang(lang) {
+  if (!T[lang]) lang = "en";
+  saveLang(lang);
+  document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const value = T[lang][el.dataset.i18n];
+    if (value !== undefined) el.textContent = value;
+  });
+  document.querySelectorAll("#langSwitch button").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.lang === lang);
+  });
+  document.title = lang === "en" ? "Volt0d" : T[lang].greeting;
+}
+
+document.querySelectorAll("#langSwitch button").forEach(btn => {
+  btn.addEventListener("click", () => setLang(btn.dataset.lang));
+});
+
+setLang(loadLang());
+
+/* ---------- Chick game (black & white, hop over the rocks) ---------- */
+(function () {
+  const canvas = document.getElementById("dino");
+  const ctx = canvas.getContext("2d");
+  const box = document.getElementById("gameBox");
+
+  const W = 600, H = 150, GROUND = 127;
+  const CHICK_H = 40, CHICK_X = 40;
+  const JUMP_V = -8.5, GRAVITY = 0.6;
+  const DPR = Math.max(1, window.devicePixelRatio || 1);
+  canvas.width = W * DPR;
+  canvas.height = H * DPR;
+  canvas.style.aspectRatio = W + " / " + H;
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+
+  let state, speed, distance, frames, rocks, clouds, nextRock, chick;
+  let hi = 0, night = false, groundX = 0, lastNight = 0;
+
+  function pad(n) { return String(n).padStart(5, "0"); }
+  function score() { return Math.floor(distance * 0.025); }
+
+  function reset() {
+    state = "ready";
+    speed = 6;
+    distance = 0;
+    frames = 0;
+    rocks = [];
+    clouds = [{ x: W + 60, y: 22 }, { x: W + 300, y: 40 }];
+    nextRock = 90;
+    chick = { y: GROUND - CHICK_H, vy: 0, onGround: true, phase: 0 };
+    night = false;
+    groundX = 0;
+    lastNight = 0;
+  }
+
+  function gameOver() {
+    state = "over";
+    hi = Math.max(hi, score());
+  }
+
+  function jump() {
+    if (state === "over") {
+      reset();
+      state = "running";
+      return;
+    }
+    if (state === "ready") state = "running";
+    if (state === "running" && chick.onGround) {
+      chick.vy = JUMP_V;
+      chick.onGround = false;
+    }
+  }
+
+  function spawnRocks() {
+    const count = 1 + Math.floor(Math.random() * 3);
+    const parts = [];
+    let dx = 0, maxH = 0;
+    for (let i = 0; i < count; i++) {
+      const w = 12 + Math.floor(Math.random() * 11);
+      const h = 16 + Math.floor(Math.random() * 16);
+      const pts = [];
+      const N = 8;
+      for (let k = 0; k <= N; k++) {
+        const a = Math.PI + k * Math.PI / N;
+        const j = 0.85 + Math.random() * 0.3;
+        pts.push([Math.cos(a) * (w / 2) * j, Math.sin(a) * h * j]);
+      }
+      parts.push({ dx: dx, w: w, h: h, pts: pts, crack: Math.random() * 0.4 - 0.2 });
+      dx += w + 4;
+      maxH = Math.max(maxH, h);
+    }
+    const total = dx - 4;
+    rocks.push({ x: W + 10, y: GROUND + 4 - maxH, w: total, h: maxH, parts: parts });
+    nextRock = (total + 120 + Math.random() * 120 + speed * 12) / speed;
+  }
+
+  function chickBox() {
+    return { x: CHICK_X + 6, y: chick.y + 6, w: 30, h: 31 };
+  }
+
+  function overlap(a, b) {
+    return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+  }
+
+  function update(step) {
+    if (state !== "running") return;
+
+    frames += step;
+    speed = Math.min(13, speed + 0.001 * step);
+    distance += speed * step;
+    groundX -= speed * step;
+
+    clouds.forEach(c => { c.x -= speed * 0.25 * step; });
+    clouds = clouds.filter(c => c.x > -70);
+    if (clouds.length < 3 && Math.random() < 0.004 * step) {
+      clouds.push({ x: W + Math.random() * 200, y: 15 + Math.random() * 45 });
+    }
+
+    if (!chick.onGround) {
+      chick.vy += GRAVITY * step;
+      chick.y += chick.vy * step;
+      const floor = GROUND - CHICK_H;
+      if (chick.y >= floor) {
+        chick.y = floor;
+        chick.vy = 0;
+        chick.onGround = true;
+      }
+    } else {
+      chick.y = GROUND - CHICK_H;
+      chick.phase += speed * 0.09 * step;
+    }
+
+    rocks.forEach(r => { r.x -= speed * step; });
+    rocks = rocks.filter(r => r.x + r.w > -10);
+
+    nextRock -= step;
+    if (nextRock <= 0) spawnRocks();
+
+    const cb = chickBox();
+    for (const r of rocks) {
+      const rb = { x: r.x + 2, y: r.y, w: r.w - 4, h: r.h };
+      if (overlap(cb, rb)) {
+        gameOver();
+        return;
+      }
+    }
+
+    const sc = score();
+    const n = Math.floor(sc / 700);
+    if (n !== lastNight) {
+      lastNight = n;
+      night = n % 2 === 1;
+    }
+
+  }
+
+  function drawLeg(x1, y1, x2, y2) {
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+  }
+
+  function drawChick(FG, BG) {
+    const x = CHICK_X, y = chick.y;
+    const running = state === "running" && chick.onGround;
+
+    // legs, synced to running speed and attached to the body
+    ctx.strokeStyle = FG;
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = "round";
+    if (running) {
+      const s = Math.sin(chick.phase) * 4;
+      drawLeg(x + 18, y + 35, x + 18 + s, GROUND);
+      drawLeg(x + 26, y + 35, x + 26 - s, GROUND);
+    } else if (chick.onGround) {
+      drawLeg(x + 18, y + 35, x + 18, GROUND);
+      drawLeg(x + 26, y + 35, x + 26, GROUND);
+    } else {
+      drawLeg(x + 18, y + 35, x + 14, y + 38);
+      drawLeg(x + 26, y + 35, x + 30, y + 38);
+    }
+
+    // tail
+    ctx.fillStyle = FG;
+    ctx.beginPath();
+    ctx.moveTo(x + 6, y + 20);
+    ctx.lineTo(x - 4, y + 12);
+    ctx.lineTo(x + 2, y + 27);
+    ctx.closePath();
+    ctx.fill();
+
+    // body
+    ctx.beginPath();
+    ctx.ellipse(x + 20, y + 24, 15, 12, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // wing, flaps while running
+    ctx.fillStyle = BG;
+    ctx.beginPath();
+    ctx.ellipse(x + 16, y + 23, 8, 4.5, -0.2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = FG;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // head
+    ctx.fillStyle = FG;
+    ctx.beginPath();
+    ctx.arc(x + 31, y + 12, 9.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // comb
+    ctx.beginPath();
+    ctx.arc(x + 27, y + 3, 3.2, 0, Math.PI * 2);
+    ctx.arc(x + 31, y + 2, 3.5, 0, Math.PI * 2);
+    ctx.arc(x + 35, y + 3, 3, 0, Math.PI * 2);
+    ctx.fill();
+
+    // beak
+    ctx.beginPath();
+    ctx.moveTo(x + 39, y + 10);
+    ctx.lineTo(x + 47, y + 13);
+    ctx.lineTo(x + 39, y + 16);
+    ctx.closePath();
+    ctx.fill();
+
+    // eye
+    ctx.fillStyle = BG;
+    ctx.beginPath();
+    ctx.arc(x + 34, y + 10, 2.2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = FG;
+    ctx.beginPath();
+    ctx.arc(x + 34.5, y + 10, 1, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function drawRocks(r, FG, BG) {
+    const base = GROUND + 4;
+    r.parts.forEach(p => {
+      const cx = r.x + p.dx + p.w / 2;
+      ctx.fillStyle = FG;
+      ctx.beginPath();
+      p.pts.forEach((q, i) => {
+        const px = cx + q[0], py = base + q[1];
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      });
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = BG;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(cx + p.crack * p.w - p.w * 0.1, base - p.h * 0.6);
+      ctx.lineTo(cx + p.crack * p.w + p.w * 0.1, base - p.h * 0.3);
+      ctx.stroke();
+    });
+  }
+
+  function render() {
+    const inv = night;
+    const BG = inv ? "#000" : "#fff";
+    const FG = inv ? "#fff" : "#000";
+
+    ctx.fillStyle = BG;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.fillStyle = FG;
+    ctx.fillRect(0, GROUND, W, 1);
+    for (let i = 0; i < 16; i++) {
+      const px = (((i * 53 + groundX) % W) + W) % W;
+      ctx.fillRect(px, GROUND + 6 + (i % 2) * 4, 2 + (i % 3), 1);
+    }
+
+    ctx.globalAlpha = 0.25;
+    clouds.forEach(c => {
+      ctx.fillStyle = FG;
+      ctx.fillRect(c.x, c.y, 46, 8);
+      ctx.fillRect(c.x + 10, c.y - 5, 20, 6);
+    });
+    ctx.globalAlpha = 1;
+
+    drawChick(FG, BG);
+    rocks.forEach(r => drawRocks(r, FG, BG));
+
+    ctx.fillStyle = FG;
+    ctx.font = "bold 13px monospace";
+    ctx.textAlign = "right";
+    ctx.fillText("HI " + pad(hi) + "  " + pad(score()), W - 12, 20);
+    ctx.textAlign = "start";
+
+    if (state === "over") {
+      ctx.textAlign = "center";
+      ctx.font = "bold 16px monospace";
+      ctx.fillText("GAME OVER", W / 2, 70);
+      ctx.font = "12px monospace";
+      ctx.fillText("Space / tap to restart", W / 2, 90);
+      ctx.textAlign = "start";
+    }
+  }
+
+  let last = 0;
+  function loop(t) {
+    const dt = last ? Math.min(50, t - last) : 16.67;
+    last = t;
+    update(dt / 16.67);
+    render();
+    requestAnimationFrame(loop);
+  }
+
+  document.addEventListener("keydown", e => {
+    const tag = document.activeElement && document.activeElement.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+    if (e.code === "Space" || e.code === "ArrowUp") {
+      e.preventDefault();
+      if (!e.repeat) jump();
+    }
+  });
+
+  box.addEventListener("pointerdown", e => {
+    e.preventDefault();
+    jump();
+  });
+
+  reset();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
